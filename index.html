@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggest - Solves All Personal Problems in Life</title>
+    
+    <!-- Copyright & Trademark Metadata Safeguards -->
+    <meta name="copyright" content="© 2026 Suggest. All Rights Reserved. Protected Design & Trade Dress.">
+    <meta name="author" content="Suggest Services">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="rights-standard" content="All UI/UX visual layout, design components, branding, color palette, and interface workflow are protected under copyright, design patent, and international trade dress laws. Unauthorized replication, duplication, or reproduction via prompt engineering, screenshot synthesis, automated scraping, or manual recreation on any platform is strictly prohibited.">
+
+    <!-- Tailwind CSS Script -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Prevent content selection to protect visual asset scraping */
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Allow typing inside form inputs and textareas */
+        input, textarea, [contenteditable="true"] {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+
+        /* Fallback SVG capping in case Tailwind script load is delayed */
+        svg {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body class="bg-[#0b1021] text-slate-100 min-h-screen flex flex-col justify-between relative overflow-x-hidden font-sans">
+
+    <!-- Header Navigation -->
+    <header class="w-full max-w-7xl mx-auto px-6 py-8 flex justify-between items-center relative z-10">
+        <div class="flex items-center space-x-3">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-400 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <svg class="w-6 h-6 text-white shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                </svg>
+            </div>
+            <span class="text-2xl font-black tracking-tight text-white">Suggest</span>
+            
+            <!-- Added About Tab Link -->
+            <button onclick="openAboutModal()" class="ml-4 text-sm font-semibold text-slate-400 hover:text-white transition-colors duration-200 flex items-center space-x-1.5 px-3 py-1.5 rounded-full hover:bg-slate-800/60">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>About</span>
+            </button>
+        </div>
+
+        <button onclick="handleInboxClick()" class="relative inline-flex items-center space-x-2 bg-[#12182d] hover:bg-[#1a233d] border border-slate-800/80 px-4 py-2 rounded-full text-sm font-medium text-slate-200 transition-all duration-200 shadow-md">
+            <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            <span>Inbox</span>
+            <span id="inboxBadge" class="bg-indigo-600 text-white text-xs font-extrabold px-2 py-0.5 rounded-full ml-1 min-w-[20px] text-center">0</span>
+        </button>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="w-full max-w-4xl mx-auto px-4 py-4 flex-grow flex flex-col justify-center items-center relative z-10">
+
+        <!-- Banner Notification -->
+        <div id="notificationBox" class="hidden mb-6 w-full max-w-2xl p-4 rounded-xl text-sm flex items-center space-x-3 transition-all">
+            <span id="notificationText"></span>
+        </div>
+
+        <!-- INBOX Full Alert Badge (Shown when limit reached) -->
+        <div id="inboxFullBadge" class="hidden mb-6 w-full max-w-2xl p-4 rounded-2xl bg-rose-950/80 border border-rose-800 text-rose-200 text-sm font-semibold flex items-center justify-center space-x-2 shadow-lg">
+            <svg class="w-5 h-5 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <span id="inboxFullBadgeText">INBOX IS FULL (1.0 GB Storage Limit Reached). Please clear space in the inbox to accept new submissions.</span>
+        </div>
+
+        <!-- Prominent Hero Title -->
+        <div class="text-center mb-8">
+            <h1 class="text-5xl md:text-7xl font-black text-white tracking-tight mb-3">
+                Suggest
+            </h1>
+            <p class="text-indigo-400 text-base md:text-xl font-medium tracking-wide">
+                Solves All Personal Problems in Life
+            </p>
+        </div>
+
+        <!-- Submission Form Box (Exact Screenshot Design) -->
+        <form id="suggestForm" onsubmit="handleSave(event)" class="w-full max-w-2xl bg-white rounded-[28px] p-6 md:p-8 shadow-2xl text-slate-900 mb-8 border border-white/10">
+            <div class="mb-5">
+                <h2 class="text-xs font-black tracking-widest text-slate-700 uppercase">
+                    TYPE YOUR PROBLEMS AND EMAIL ID AND CLICK SAVE BUTTON
+                </h2>
+                <p class="text-xs text-indigo-600 font-bold mt-1">
+                    The solutions will be sent to your mail id
+                </p>
+            </div>
+
+            <div class="relative mb-6">
+                <div class="absolute top-4 left-4 pointer-events-none text-slate-400">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <textarea id="problemInput" rows="4" required placeholder="Describe what's troubling you (career, relationships, stress, finances)..." class="w-full bg-[#f8fafc] border border-slate-200/80 focus:border-blue-500 focus:bg-white rounded-2xl pt-3.5 pb-3.5 pl-12 pr-4 text-slate-800 placeholder-slate-400 text-sm leading-relaxed outline-none resize-none transition duration-200"></textarea>
+            </div>
+
+            <!-- Save Action Button -->
+            <div class="flex justify-end">
+                <button type="submit" class="py-3 px-8 rounded-2xl bg-gradient-to-r from-blue-500 to-sky-400 hover:from-blue-600 hover:to-sky-500 text-white font-bold text-sm shadow-lg shadow-blue-500/40 active:scale-[0.98] transition duration-200 flex items-center space-x-2">
+                    <span>Save</span>
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+
+        <!-- Category Tag Pills -->
+        <div class="flex flex-wrap justify-center gap-2.5 max-w-2xl">
+            <button type="button" onclick="setCategory('Career & Work')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>💼</span> <span>Career & Work</span>
+            </button>
+            <button type="button" onclick="setCategory('Mental Peace')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>🧘</span> <span>Mental Peace</span>
+            </button>
+            <button type="button" onclick="setCategory('Relationships')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>❤️</span> <span>Relationships</span>
+            </button>
+            <button type="button" onclick="setCategory('Financial Growth')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>📈</span> <span>Financial Growth</span>
+            </button>
+            <button type="button" onclick="setCategory('Travel tips')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>✈️</span> <span>Travel tips</span>
+            </button>
+            <button type="button" onclick="setCategory('Legal Advice')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>⚖️</span> <span>Legal Advice</span>
+            </button>
+            <button type="button" onclick="setCategory('Marketing Techniques')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>📢</span> <span>Marketing Techniques</span>
+            </button>
+            <button type="button" onclick="setCategory('Sports')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>⚽</span> <span>Sports</span>
+            </button>
+            <button type="button" onclick="setCategory('Real Estate')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>🏢</span> <span>Real Estate</span>
+            </button>
+            <button type="button" onclick="setCategory('Film industry')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>🎬</span> <span>Film industry</span>
+            </button>
+            <button type="button" onclick="setCategory('Horoscope')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>🔮</span> <span>Horoscope</span>
+            </button>
+            <button type="button" onclick="setCategory('Devotional')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>🛕</span> <span>Devotional</span>
+            </button>
+            <button type="button" onclick="setCategory('Trading Advice')" class="text-xs bg-[#131b31]/90 hover:bg-[#1a2542] border border-slate-800 text-slate-300 font-medium px-4 py-2 rounded-full transition flex items-center space-x-2 shadow-sm">
+                <span>📊</span> <span>Trading Advice</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-6xl mx-auto px-4 py-8 text-center text-xs text-slate-500 relative z-10">
+        <p class="mb-1">&copy; 2026 <strong class="text-slate-300">Suggest</strong>. All rights reserved. Solves All Personal Problems in Life.</p>
+        <p class="text-[10px] text-slate-600 max-w-xl mx-auto">
+            <strong>Copyright & Trade Dress Warning:</strong> Unauthorized reproduction, design cloning, screenshot-to-code generation, AI prompt replication, or copying of this UI/UX layout across any platform is strictly prohibited and subject to DMCA takedown actions.
+        </p>
+    </footer>
+
+    <!-- Slide-over Inbox Panel -->
+    <div id="inboxBackdrop" onclick="toggleInbox()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 hidden transition-opacity"></div>
+    <aside id="inboxPanel" class="fixed right-0 top-0 bottom-0 w-full max-w-md bg-slate-900 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
+        <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+            <div>
+                <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                    <span>Global Inbox</span>
+                    <span id="inboxTotalCount" class="text-xs bg-slate-800 text-slate-400 font-normal px-2.5 py-0.5 rounded-full border border-slate-700">0 submissions</span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5">Encrypted entries real-time database sync</p>
+            </div>
+            <button onclick="toggleInbox()" class="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Search Bar Inside Inbox -->
+        <div class="p-4 border-b border-slate-800/60 bg-slate-950/40">
+            <input type="text" id="inboxSearch" oninput="renderInbox()" placeholder="Search in inbox..." class="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500/80 rounded-xl px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 outline-none">
+        </div>
+
+        <!-- Submissions List -->
+        <div id="inboxList" class="p-4 space-y-3 overflow-y-auto flex-grow">
+            <!-- Dynamic Inbox Items Rendered Here -->
+        </div>
+
+        <div class="p-4 border-t border-slate-800 flex justify-between items-center bg-slate-950/60">
+            <button onclick="clearAllInbox()" class="text-xs text-rose-400 hover:text-rose-300 font-medium transition">Clear Inbox</button>
+            <button onclick="logoutInbox()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">Lock / Logout</button>
+        </div>
+    </aside>
+
+    <!-- Admin Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative">
+            <h3 class="text-lg font-bold text-white mb-1">Inbox Authentication</h3>
+            <p class="text-xs text-slate-400 mb-6">Enter your administrative credentials to decrypt and view global questions.</p>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">User ID</label>
+                    <input type="text" id="loginUserId" required autocomplete="off" class="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500/80 rounded-xl px-3.5 py-2.5 text-sm text-slate-200 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Password</label>
+                    <input type="password" id="loginPassword" required class="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500/80 rounded-xl px-3.5 py-2.5 text-sm text-slate-200 outline-none">
+                </div>
+
+                <div id="loginError" class="hidden text-xs text-rose-400 bg-rose-950/50 border border-rose-800/60 rounded-xl p-2.5 text-center">
+                    Invalid credentials. Please try again.
+                </div>
+
+                <div class="flex space-x-3 pt-2">
+                    <button type="button" onclick="closeLoginModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-700 text-slate-300 text-xs font-semibold hover:bg-slate-800 transition">Cancel</button>
+                    <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 transition">Unlock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Detail View Modal -->
+    <div id="detailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md shadow-2xl relative">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-800">
+                <span id="modalDate" class="text-xs text-slate-400"></span>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white p-1">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="modalProblem" class="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap max-h-96 overflow-y-auto mb-6"></div>
+            <button onclick="closeModal()" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold transition">Close</button>
+        </div>
+    </div>
+
+    <!-- Protected About Modal -->
+    <div id="aboutModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-lg shadow-2xl relative flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-800">
+                <div class="flex items-center space-x-2">
+                    <div class="w-7 h-7 rounded-lg bg-blue-600/30 flex items-center justify-center text-blue-400">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">About Suggest</h3>
+                </div>
+                <button onclick="closeAboutModal()" class="text-slate-400 hover:text-white p-1">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Display view for public users -->
+            <div id="aboutViewContent" class="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap overflow-y-auto flex-grow p-2">
+                Loading service information...
+            </div>
+
+            <!-- Editable view for admin only -->
+            <div id="aboutEditContainer" class="hidden flex-col flex-grow my-2">
+                <label class="block text-xs font-semibold text-indigo-400 mb-1.5 uppercase tracking-wider">Edit Service Information (Admin Only)</label>
+                <textarea id="aboutEditText" rows="8" class="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-sm text-slate-200 outline-none leading-relaxed resize-none"></textarea>
+            </div>
+
+            <!-- Footer Controls -->
+            <div class="pt-4 border-t border-slate-800 flex justify-between items-center mt-2">
+                <div id="aboutAdminBadge" class="text-[11px] text-slate-500 italic">
+                    Read-only mode
+                </div>
+                <div class="flex space-x-2">
+                    <button id="aboutEditBtn" onclick="toggleAboutEditMode()" class="hidden px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold transition">Edit</button>
+                    <button id="aboutSaveBtn" onclick="saveAboutContent()" class="hidden px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 transition">Save Changes</button>
+                    <button onclick="closeAboutModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold transition">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Encryption Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAz5lVsE_ZDCNeogM2dYndfZmRBvuN8Ibc",
+            authDomain: "suggest-ae937.firebaseapp.com",
+            projectId: "suggest-ae937",
+            storageBucket: "suggest-ae937.firebasestorage.app",
+            messagingSenderId: "371745644142",
+            appId: "1:371745644142:web:6cd8b132861e5b24fb107f",
+            measurementId: "G-36S9TRLJYJ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let inboxData = [];
+        let isAuthenticated = false;
+        let aboutContentText = "Welcome to Suggest!\n\nSuggest is a platform designed to solve all personal problems in life. Whether you are seeking advice regarding career, mental peace, relationships, financial growth, travel, or legal guidance, simply submit your questions and your solutions will be addressed directly to your email ID.";
+        let isEditingAbout = false;
+
+        // Inbox Credentials
+        const AUTH_USER_ID = "mahalaxmi";
+        const AUTH_PASS = "srimatrenamaha";
+
+        // Firebase Firestore Free Tier Allocation Storage Limit (1 GB in Bytes)
+        const MAX_STORAGE_BYTES = 1024 * 1024 * 1024; // 1,073,741,824 bytes (1.0 GB)
+
+        async function getCryptoKey() {
+            const enc = new TextEncoder();
+            const passKey = enc.encode(AUTH_USER_ID + "_" + AUTH_PASS);
+            const keyMaterial = await window.crypto.subtle.importKey(
+                "raw",
+                passKey,
+                { name: "PBKDF2" },
+                false,
+                ["deriveBits", "deriveKey"]
+            );
+            return window.crypto.subtle.deriveKey(
+                {
+                    name: "PBKDF2",
+                    salt: enc.encode("SuggestAppSecureSalt2026"),
+                    iterations: 100000,
+                    hash: "SHA-256"
+                },
+                keyMaterial,
+                { name: "AES-GCM", length: 256 },
+                false,
+                ["encrypt", "decrypt"]
+            );
+        }
+
+        async function encryptText(plainText) {
+            try {
+                const key = await getCryptoKey();
+                const enc = new TextEncoder();
+                const iv = window.crypto.getRandomValues(new Uint8Array(12));
+                const encrypted = await window.crypto.subtle.encrypt(
+                    { name: "AES-GCM", iv: iv },
+                    key,
+                    enc.encode(plainText)
+                );
+                return {
+                    ciphertext: Array.from(new Uint8Array(encrypted)).map(b => b.toString(16).padStart(2, '0')).join(''),
+                    iv: Array.from(iv).map(b => b.toString(16).padStart(2, '0')).join('')
+                };
+            } catch (e) {
+                console.error("Encryption error:", e);
+                return null;
+            }
+        }
+
+        async function decryptText(ciphertext, ivHex) {
+            try {
+                if (!ivHex || !ciphertext) return ciphertext;
+                const key = await getCryptoKey();
+                const iv = new Uint8Array(ivHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+                const encryptedData = new Uint8Array(ciphertext.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+                const decrypted = await window.crypto.subtle.decrypt(
+                    { name: "AES-GCM", iv: iv },
+                    key,
+                    encryptedData
+                );
+                return new TextDecoder().decode(decrypted);
+            } catch (e) {
+                // If decryption with current key fails, return original text or raw content
+                return ciphertext;
+            }
+        }
+
+        const publicCollectionRef = collection(db, 'submissions');
+        const metaDocRef = doc(db, 'settings', 'aboutDoc');
+
+        async function initAuth() {
+            try {
+                const userCredential = await signInAnonymously(auth);
+                currentUser = userCredential.user;
+                listenToGlobalSubmissions();
+                listenToAboutDoc();
+            } catch (error) {
+                console.error("Firebase Auth Error:", error);
+                showBannerError("Firebase Auth Error: Ensure Anonymous Auth is enabled in Firebase Console.");
+            }
+        }
+
+        function listenToAboutDoc() {
+            onSnapshot(metaDocRef, (docSnap) => {
+                if (docSnap.exists() && docSnap.data().content) {
+                    aboutContentText = docSnap.data().content;
+                }
+                updateAboutUI();
+            });
+        }
+
+        function updateAboutUI() {
+            const viewContainer = document.getElementById('aboutViewContent');
+            const editArea = document.getElementById('aboutEditText');
+            const editBtn = document.getElementById('aboutEditBtn');
+            const badge = document.getElementById('aboutAdminBadge');
+
+            if (viewContainer) viewContainer.textContent = aboutContentText;
+            if (editArea && !isEditingAbout) editArea.value = aboutContentText;
+
+            if (isAuthenticated) {
+                if (editBtn) editBtn.classList.remove('hidden');
+                if (badge) badge.textContent = "Admin authenticated (Owner permissions)";
+            } else {
+                if (editBtn) editBtn.classList.add('hidden');
+                if (badge) badge.textContent = "Read-only mode";
+            }
+        }
+
+        window.openAboutModal = function() {
+            isEditingAbout = false;
+            document.getElementById('aboutViewContent').classList.remove('hidden');
+            document.getElementById('aboutEditContainer').classList.add('hidden');
+            document.getElementById('aboutSaveBtn').classList.add('hidden');
+            if (isAuthenticated) {
+                document.getElementById('aboutEditBtn').classList.remove('hidden');
+            }
+            updateAboutUI();
+            document.getElementById('aboutModal').classList.remove('hidden');
+        };
+
+        window.closeAboutModal = function() {
+            document.getElementById('aboutModal').classList.add('hidden');
+        };
+
+        window.toggleAboutEditMode = function() {
+            if (!isAuthenticated) return;
+            isEditingAbout = true;
+            document.getElementById('aboutViewContent').classList.add('hidden');
+            document.getElementById('aboutEditContainer').classList.remove('hidden');
+            document.getElementById('aboutEditContainer').classList.add('flex');
+            document.getElementById('aboutEditBtn').classList.add('hidden');
+            document.getElementById('aboutSaveBtn').classList.remove('hidden');
+            document.getElementById('aboutEditText').focus();
+        };
+
+        window.saveAboutContent = async function() {
+            if (!isAuthenticated) return;
+            const newText = document.getElementById('aboutEditText').value.trim();
+            if (!newText) return;
+
+            try {
+                // Use setDoc with merge: true to ensure the document is created or updated smoothly
+                await setDoc(metaDocRef, {
+                    content: newText,
+                    updatedAt: Date.now()
+                }, { merge: true });
+
+                aboutContentText = newText;
+                isEditingAbout = false;
+                
+                // Update UI view mode
+                document.getElementById('aboutViewContent').classList.remove('hidden');
+                document.getElementById('aboutEditContainer').classList.add('hidden');
+                document.getElementById('aboutEditContainer').classList.remove('flex');
+                document.getElementById('aboutSaveBtn').classList.add('hidden');
+                document.getElementById('aboutEditBtn').classList.remove('hidden');
+                
+                updateAboutUI();
+                showBannerSuccess("About page content successfully updated!");
+            } catch (err) {
+                console.error("Error saving about content:", err);
+                showBannerError("Failed to save: Ensure Firestore Security Rules allow updating settings/aboutDoc.");
+            }
+        };
+
+        function listenToGlobalSubmissions() {
+            onSnapshot(publicCollectionRef, async (snapshot) => {
+                const rawDocs = snapshot.docs.map(docSnap => ({
+                    id: docSnap.id,
+                    ...docSnap.data()
+                }));
+
+                inboxData = await Promise.all(rawDocs.map(async (data) => {
+                    let text = data.problem || '';
+                    const rawProblem = text;
+                    if (data.isEncrypted && data.iv) {
+                        if (isAuthenticated) {
+                            text = await decryptText(text, data.iv);
+                        } else {
+                            text = "🔒 Encrypted Content (Log in to decrypt)";
+                        }
+                    }
+
+                    // Estimate size of document in bytes for Firestore calculation
+                    const docSizeBytes = new Blob([JSON.stringify(data)]).size;
+
+                    return {
+                        id: data.id,
+                        problem: text,
+                        rawProblem: rawProblem,
+                        sizeBytes: docSizeBytes,
+                        isEncrypted: data.isEncrypted || false,
+                        timestamp: data.timestamp || Date.now(),
+                        date: data.date || new Date().toLocaleString('en-US', {
+                            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                        })
+                    };
+                }));
+
+                inboxData.sort((a, b) => b.timestamp - a.timestamp);
+                renderInbox();
+                checkInboxCapacityStatus();
+            }, (error) => {
+                console.error("Error listening to global submissions:", error);
+                showBannerError("Firestore Access Blocked! Update Firestore Security Rules to allow read/write.");
+            });
+        }
+
+        function checkInboxCapacityStatus() {
+            // Calculate total memory size across all stored submissions
+            const totalSizeBytes = inboxData.reduce((acc, curr) => acc + (curr.sizeBytes || 0), 0);
+            const isFull = totalSizeBytes >= MAX_STORAGE_BYTES;
+
+            const fullBadge = document.getElementById('inboxFullBadge');
+            const saveButton = document.querySelector('#suggestForm button[type="submit"]');
+
+            if (isFull) {
+                if (fullBadge) fullBadge.classList.remove('hidden');
+                if (saveButton) {
+                    saveButton.disabled = true;
+                    saveButton.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            } else {
+                if (fullBadge) fullBadge.classList.add('hidden');
+                if (saveButton) {
+                    saveButton.disabled = false;
+                    saveButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        }
+
+        function showBannerSuccess(msg) {
+            const box = document.getElementById('notificationBox');
+            const txt = document.getElementById('notificationText');
+            box.className = "mb-6 p-4 rounded-xl text-sm flex items-center space-x-3 transition-all bg-emerald-950/80 border border-emerald-700/60 text-emerald-200";
+            txt.textContent = msg;
+            box.classList.remove('hidden');
+            setTimeout(() => box.classList.add('hidden'), 5000);
+        }
+
+        function showBannerError(msg) {
+            const box = document.getElementById('notificationBox');
+            const txt = document.getElementById('notificationText');
+            box.className = "mb-6 p-4 rounded-xl text-sm flex items-center space-x-3 transition-all bg-rose-950/80 border border-rose-700/60 text-rose-200";
+            txt.textContent = msg;
+            box.classList.remove('hidden');
+        }
+
+        window.handleSave = async function(event) {
+            event.preventDefault();
+
+            // Calculate total inbox bytes stored in Firestore
+            const currentSizeBytes = inboxData.reduce((acc, curr) => acc + (curr.sizeBytes || 0), 0);
+            if (currentSizeBytes >= MAX_STORAGE_BYTES) {
+                showBannerError("INBOX is full (1.0 GB Firestore storage quota reached). Submissions are temporarily closed.");
+                return;
+            }
+
+            const problem = document.getElementById('problemInput').value.trim();
+            if (!problem) return;
+
+            const now = new Date();
+            const formattedDate = now.toLocaleString('en-US', {
+                month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+
+            try {
+                const encryptedPayload = await encryptText(problem);
+
+                if (!encryptedPayload) {
+                    showBannerError("Encryption failed in browser.");
+                    return;
+                }
+
+                await addDoc(publicCollectionRef, {
+                    problem: encryptedPayload.ciphertext,
+                    iv: encryptedPayload.iv,
+                    isEncrypted: true,
+                    timestamp: Date.now(),
+                    date: formattedDate,
+                    userId: currentUser ? currentUser.uid : 'anonymous'
+                });
+
+                showBannerSuccess("Saved! Your question and email ID have been encrypted and securely stored.");
+                document.getElementById('suggestForm').reset();
+            } catch (err) {
+                console.error("Failed to save submission:", err);
+                showBannerError("Permission Denied: Check Firebase Console Firestore rules.");
+            }
+        };
+
+        window.handleInboxClick = function() {
+            if (isAuthenticated) {
+                toggleInbox();
+            } else {
+                openLoginModal();
+            }
+        };
+
+        window.openLoginModal = function() {
+            document.getElementById('loginUserId').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').classList.add('hidden');
+            document.getElementById('loginModal').classList.remove('hidden');
+            document.getElementById('loginUserId').focus();
+        };
+
+        window.closeLoginModal = function() {
+            document.getElementById('loginModal').classList.add('hidden');
+        };
+
+        window.handleLogin = async function(e) {
+            e.preventDefault();
+            const user = document.getElementById('loginUserId').value.trim();
+            const pass = document.getElementById('loginPassword').value.trim();
+
+            if (user === AUTH_USER_ID && pass === AUTH_PASS) {
+                isAuthenticated = true;
+                closeLoginModal();
+                listenToGlobalSubmissions();
+                updateAboutUI();
+                toggleInbox();
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        };
+
+        window.logoutInbox = function() {
+            isAuthenticated = false;
+            listenToGlobalSubmissions();
+            updateAboutUI();
+            toggleInbox();
+        };
+
+        window.toggleInbox = function() {
+            const panel = document.getElementById('inboxPanel');
+            const backdrop = document.getElementById('inboxBackdrop');
+            const isHidden = panel.classList.contains('translate-x-full');
+
+            if (isHidden) {
+                backdrop.classList.remove('hidden');
+                panel.classList.remove('translate-x-full');
+            } else {
+                panel.classList.add('translate-x-full');
+                backdrop.classList.add('hidden');
+            }
+        };
+
+        window.renderInbox = function() {
+            const listContainer = document.getElementById('inboxList');
+            const searchVal = document.getElementById('inboxSearch')?.value.toLowerCase() || '';
+            const badge = document.getElementById('inboxBadge');
+            const totalCount = document.getElementById('inboxTotalCount');
+
+            if (!listContainer || !badge || !totalCount) return;
+
+            // Calculate total storage utilized
+            const totalSizeBytes = inboxData.reduce((acc, curr) => acc + (curr.sizeBytes || 0), 0);
+            const totalMB = (totalSizeBytes / (1024 * 1024)).toFixed(2);
+
+            badge.textContent = inboxData.length;
+            totalCount.textContent = `${inboxData.length} items (${totalMB} MB / 1024 MB)`;
+
+            const filtered = inboxData.filter(item => 
+                item.problem.toLowerCase().includes(searchVal)
+            );
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="h-64 flex flex-col items-center justify-center text-center p-6 text-slate-500">
+                        <svg class="w-12 h-12 mb-3 text-slate-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                        </svg>
+                        <p class="text-sm font-medium text-slate-400">No submissions found.</p>
+                        <p class="text-xs text-slate-500 mt-1">Submitted questions will appear here in real time.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = filtered.map(item => `
+                <div class="p-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition group relative flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="text-xs text-slate-400">${item.date}</span>
+                            <span class="text-[10px] font-semibold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-800/50">Encrypted AES-256</span>
+                        </div>
+                        <p class="text-sm text-slate-300 line-clamp-2 cursor-pointer" onclick="openModal('${item.id}')">
+                            ${escapeHtml(item.problem)}
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center mt-3 pt-2 border-t border-slate-700/40 text-xs">
+                        <button onclick="openModal('${item.id}')" class="text-indigo-400 hover:text-indigo-300 font-medium">View Detail &rarr;</button>
+                        <button onclick="deleteInboxItem('${item.id}')" class="text-slate-500 hover:text-rose-400 transition" title="Delete">
+                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        window.openModal = function(id) {
+            const item = inboxData.find(i => i.id === id);
+            if (!item) return;
+
+            document.getElementById('modalDate').textContent = item.date;
+            document.getElementById('modalProblem').textContent = item.problem;
+            document.getElementById('detailModal').classList.remove('hidden');
+        };
+
+        window.closeModal = function() {
+            document.getElementById('detailModal').classList.add('hidden');
+        };
+
+        window.deleteInboxItem = async function(id) {
+            try {
+                await deleteDoc(doc(db, 'submissions', id));
+            } catch (err) {
+                console.error("Error deleting document:", err);
+            }
+        };
+
+        window.clearAllInbox = async function() {
+            if (inboxData.length === 0) return;
+            try {
+                const querySnapshot = await getDocs(publicCollectionRef);
+                const deletePromises = querySnapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+                await Promise.all(deletePromises);
+            } catch (err) {
+                console.error("Error clearing inbox documents:", err);
+            }
+        };
+
+        window.setCategory = function(categoryName) {
+            const textarea = document.getElementById('problemInput');
+            textarea.value = `I am looking for guidance regarding ${categoryName}. `;
+            textarea.focus();
+        };
+
+        function escapeHtml(text) {
+            return text.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+
+        // Protective Warning Listener for DevTools and Print Screen Key Commands
+        window.addEventListener('keydown', function (e) {
+            // Block PrintScreen or Inspect key combinations (Ctrl+Shift+I, F12, Ctrl+U)
+            if (
+                e.key === 'PrintScreen' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) ||
+                e.key === 'F12'
+            ) {
+                if (e.key === 'PrintScreen') {
+                    navigator.clipboard.writeText(''); // Clear clipboard on print screen attempt
+                }
+                showBannerError("COPYRIGHT NOTICE: The UI/UX design, visual aesthetics, and brand elements of 'Suggest' are protected by intellectual property laws. Unauthorized duplication or screenshot cloning on AI platforms is prohibited.");
+            }
+        });
+
+        // Context menu copyright warning on right click
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            showBannerError("COPYRIGHT PROTECTED: Design layout, logo, and trade dress are legally protected. Copying or cloning this website design on any platform is strictly prohibited.");
+        });
+
+        initAuth();
+    </script>
+</body>
+</html>
